@@ -109,6 +109,12 @@ body {
   font-size: 17px;
 }
 
+.title-actions button {
+  min-height: 44px;
+  border-color: var(--line);
+  font-size: 17px;
+}
+
 .title-link::before,
 .nav-button::before {
   content: "▶ ";

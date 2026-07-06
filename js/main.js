@@ -5,6 +5,7 @@ const messageBox = document.querySelector("#messageBox");
 const titleMenu = document.querySelector("#titleMenu");
 const buttons = {
   start: document.querySelector("#startButton"),
+  share: document.querySelector("#shareButton"),
   virus: document.querySelector("#virusButton"),
   mayo: document.querySelector("#mayoButton"),
   run: document.querySelector("#runButton")
@@ -52,6 +53,23 @@ function clamp(value, min, max) {
 
 function randInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function shareToX() {
+  const shareUrl = new URL(window.location.href);
+  shareUrl.hash = "";
+  shareUrl.search = "";
+
+  const text = [
+    "完全！感染！Eggman！",
+    "Infection Battle",
+    "Eggman Virusで感染拡大中！"
+  ].join("\n");
+
+  const intentUrl = new URL("https://twitter.com/intent/tweet");
+  intentUrl.searchParams.set("text", text);
+  intentUrl.searchParams.set("url", shareUrl.toString());
+  window.open(intentUrl.toString(), "_blank", "noopener,noreferrer");
 }
 
 async function loadEnemy(path) {
@@ -705,6 +723,7 @@ function drawCenteredText(text, x, y, size = 24, color = "#f7f1d7") {
 }
 
 buttons.start.addEventListener("click", startBattle);
+buttons.share.addEventListener("click", shareToX);
 buttons.virus.addEventListener("click", useVirus);
 buttons.mayo.addEventListener("click", useMayo);
 buttons.run.addEventListener("click", runAway);
