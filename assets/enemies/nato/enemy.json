@@ -1,0 +1,12 @@
+{
+  "id": "nato",
+  "displayName": "nato-san",
+  "level": 5,
+  "startsPixelized": false,
+  "virusResistance": 1.0,
+  "images": {
+    "normal": "assets/enemies/nato/normal.png?v=2",
+    "pixel": "assets/enemies/nato/pixel.png?v=2",
+    "eggman": "assets/enemies/nato/eggman.png?v=2"
+  }
+}

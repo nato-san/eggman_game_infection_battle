@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>感染ターゲット設定 | 完全！感染！Eggman！</title>
+    <link rel="stylesheet" href="css/styles.css?v=3">
+  </head>
+  <body>
+    <main class="settings-shell" aria-label="感染ターゲット設定">
+      <header class="settings-header">
+        <div>
+          <p>Infection Battle</p>
+          <h1>感染ターゲット設定</h1>
+        </div>
+        <a class="nav-button" href="index.html">バトルへ</a>
+      </header>
+
+      <form id="settingsForm" class="settings-panel">
+        <label class="field">
+          <span>感染させられる側の名前</span>
+          <input id="displayName" type="text" maxlength="24" placeholder="nato-san">
+        </label>
+
+        <div class="upload-grid">
+          <label class="upload-card">
+            <span>感染前画像</span>
+            <img id="normalPreview" alt="感染前画像プレビュー">
+            <input id="normalImage" type="file" accept="image/*">
+          </label>
+
+          <label class="upload-card">
+            <span>感染第一段階（ピクセル化）</span>
+            <img id="pixelPreview" alt="ピクセル化画像プレビュー">
+            <input id="pixelImage" type="file" accept="image/*">
+          </label>
+
+          <label class="upload-card">
+            <span>Eggman化</span>
+            <img id="eggmanPreview" alt="Eggman化画像プレビュー">
+            <input id="eggmanImage" type="file" accept="image/*">
+          </label>
+        </div>
+
+        <div class="settings-actions">
+          <button id="saveButton" type="submit">保存</button>
+          <button id="resetButton" type="button">初期状態に戻す</button>
+        </div>
+
+        <p id="settingsMessage" class="settings-message" aria-live="polite"></p>
+      </form>
+    </main>
+
+    <script type="module" src="js/settings.js?v=1"></script>
+  </body>
+</html>

@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>完全！感染！Eggman！ Infection Battle</title>
+    <link rel="stylesheet" href="css/styles.css?v=5">
+  </head>
+  <body>
+    <main class="game-shell" aria-label="完全！感染！Eggman！ Infection Battle">
+      <section id="titleMenu" class="title-menu" aria-label="タイトルメニュー">
+        <h1>完全！感染！Eggman！</h1>
+        <p class="title-subtitle">Infection Battle</p>
+        <nav class="title-actions" aria-label="メニュー">
+          <button id="startButton" type="button">感染スタート</button>
+          <a class="title-link" href="settings.html">感染者設定</a>
+        </nav>
+      </section>
+
+      <canvas id="battleCanvas" width="960" height="540" aria-label="感染バトル画面"></canvas>
+
+      <section class="hud" aria-live="polite">
+        <div id="messageBox" class="message-box" role="button" tabindex="0">
+          <p id="messageText"></p>
+        </div>
+
+        <nav class="command-panel" aria-label="コマンド">
+          <button id="virusButton" type="button">eggmanウィルス -5</button>
+          <button id="mayoButton" type="button">マヨビーム -30</button>
+          <button id="runButton" type="button">にげる</button>
+        </nav>
+      </section>
+    </main>
+
+    <script type="module" src="js/main.js?v=9"></script>
+  </body>
+</html>
