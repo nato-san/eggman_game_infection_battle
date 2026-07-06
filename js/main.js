@@ -284,7 +284,7 @@ function runAway() {
   setButtonsEnabled(false);
   state.scene = "escaped";
   state.messageQueue = [];
-  queueMessage(["Eggmanは", "にげだした！", "感染率は保存されない。"]);
+  queueMessage(["Eggmanは", "にげだした！", "感染は失敗した。"]);
 }
 
 function canAct() {
