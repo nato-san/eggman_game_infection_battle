@@ -141,6 +141,11 @@ function playSound(name) {
       playTone(180, 0.12, "triangle", 0.05, 0.08);
       playNoise(0.09, 0.06, 0.18);
       break;
+    case "damage":
+      playNoise(0.12, 0.08);
+      playTone(130, 0.1, "sawtooth", 0.07);
+      playTone(92, 0.16, "sawtooth", 0.06, 0.08);
+      break;
     case "complete":
       playTone(523, 0.12, "square", 0.06);
       playTone(659, 0.12, "square", 0.06, 0.1);
@@ -525,6 +530,7 @@ function enemyTurn() {
     queueMessage(["Eggmanは", "口を開いた"]);
     queueMessage(["「甘っ！」"]);
     queueMessage(["マヨネーズではなく", "生クリームだった", "ダメージ！！"], () => {
+      playSound("damage");
       player.stamina = clamp(player.stamina - damage, 0, player.maxStamina);
 
       if (cannotContinueInfection()) {
