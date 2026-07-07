@@ -18,6 +18,7 @@ python3 -m http.server 5174
 - `eggmanウィルス`
 - `マヨビーム`
 - 体力システム
+- レトロRPG風の効果音
 - 感染完了演出
 - リザルト画面
 - プレイヤー画像: `assets/player/eggman.png`

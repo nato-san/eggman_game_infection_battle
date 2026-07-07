@@ -18,6 +18,7 @@ const actionCosts = {
   mayo: 30
 };
 const enemySettingsKey = "eggmanEnemySettings:v1";
+let audioContext = null;
 const state = {
   scene: "loading",
   enemy: null,
@@ -55,7 +56,113 @@ function randInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+function getAudioContext() {
+  const AudioCtor = window.AudioContext || window.webkitAudioContext;
+  if (!AudioCtor) return null;
+
+  if (!audioContext) {
+    audioContext = new AudioCtor();
+  }
+
+  if (audioContext.state === "suspended") {
+    audioContext.resume();
+  }
+
+  return audioContext;
+}
+
+function playTone(frequency, duration = 0.12, type = "square", volume = 0.08, delay = 0) {
+  const audio = getAudioContext();
+  if (!audio) return;
+
+  const start = audio.currentTime + delay;
+  const oscillator = audio.createOscillator();
+  const gain = audio.createGain();
+  oscillator.type = type;
+  oscillator.frequency.setValueAtTime(frequency, start);
+  gain.gain.setValueAtTime(0, start);
+  gain.gain.linearRampToValueAtTime(volume, start + 0.01);
+  gain.gain.exponentialRampToValueAtTime(0.001, start + duration);
+  oscillator.connect(gain).connect(audio.destination);
+  oscillator.start(start);
+  oscillator.stop(start + duration + 0.02);
+}
+
+function playNoise(duration = 0.16, volume = 0.08, delay = 0) {
+  const audio = getAudioContext();
+  if (!audio) return;
+
+  const sampleRate = audio.sampleRate;
+  const buffer = audio.createBuffer(1, sampleRate * duration, sampleRate);
+  const data = buffer.getChannelData(0);
+  for (let i = 0; i < data.length; i += 1) {
+    data[i] = (Math.random() * 2 - 1) * (1 - i / data.length);
+  }
+
+  const source = audio.createBufferSource();
+  const gain = audio.createGain();
+  const start = audio.currentTime + delay;
+  gain.gain.setValueAtTime(volume, start);
+  gain.gain.exponentialRampToValueAtTime(0.001, start + duration);
+  source.buffer = buffer;
+  source.connect(gain).connect(audio.destination);
+  source.start(start);
+}
+
+function playSound(name) {
+  switch (name) {
+    case "select":
+      playTone(660, 0.06, "square", 0.05);
+      playTone(880, 0.08, "square", 0.04, 0.05);
+      break;
+    case "start":
+      playTone(392, 0.09, "square", 0.06);
+      playTone(523, 0.09, "square", 0.06, 0.08);
+      playTone(784, 0.14, "square", 0.06, 0.16);
+      break;
+    case "virus":
+      playTone(220, 0.08, "sawtooth", 0.05);
+      playTone(330, 0.12, "sawtooth", 0.05, 0.08);
+      playNoise(0.12, 0.035, 0.02);
+      break;
+    case "mayo":
+      playTone(330, 0.12, "triangle", 0.07);
+      playTone(440, 0.16, "triangle", 0.07, 0.08);
+      playTone(660, 0.28, "triangle", 0.08, 0.2);
+      break;
+    case "pixel":
+      playNoise(0.28, 0.09);
+      playTone(900, 0.05, "square", 0.05, 0.02);
+      playTone(520, 0.05, "square", 0.05, 0.08);
+      playTone(760, 0.06, "square", 0.05, 0.14);
+      break;
+    case "cream":
+      playTone(300, 0.1, "triangle", 0.05);
+      playTone(180, 0.12, "triangle", 0.05, 0.08);
+      playNoise(0.09, 0.06, 0.18);
+      break;
+    case "complete":
+      playTone(523, 0.12, "square", 0.06);
+      playTone(659, 0.12, "square", 0.06, 0.1);
+      playTone(784, 0.12, "square", 0.06, 0.2);
+      playTone(1046, 0.28, "square", 0.06, 0.3);
+      break;
+    case "fail":
+      playTone(220, 0.18, "sawtooth", 0.06);
+      playTone(165, 0.28, "sawtooth", 0.06, 0.16);
+      break;
+    case "run":
+      playTone(740, 0.06, "square", 0.05);
+      playTone(520, 0.06, "square", 0.05, 0.06);
+      playTone(360, 0.1, "square", 0.05, 0.12);
+      break;
+    default:
+      break;
+  }
+}
+
 function shareToX() {
+  playSound("select");
   const shareUrl = new URL(window.location.href);
   shareUrl.hash = "";
   shareUrl.search = "";
@@ -212,6 +319,8 @@ function typeMessage(text, done) {
 }
 
 function advanceMessage() {
+  playSound("select");
+
   if (state.scene === "result" || state.scene === "escaped") {
     resetToTitle();
     return;
@@ -251,6 +360,7 @@ function resetToTitle() {
 }
 
 function startBattle() {
+  playSound("start");
   clearTyping();
   setTitleVisible(false);
   state.scene = "battle";
@@ -267,6 +377,7 @@ function startBattle() {
 async function useVirus() {
   if (!canAct()) return;
   if (!trySpendEnergy("eggmanウィルス", actionCosts.virus)) return;
+  playSound("virus");
   state.busy = true;
   setButtonsEnabled(false);
   state.lastAction = "eggmanウィルス";
@@ -284,6 +395,7 @@ async function useVirus() {
 async function useMayo() {
   if (!canAct()) return;
   if (!trySpendEnergy("マヨビーム", actionCosts.mayo)) return;
+  playSound("mayo");
   state.busy = true;
   setButtonsEnabled(false);
   state.lastAction = "マヨビーム";
@@ -298,6 +410,7 @@ async function useMayo() {
 
 function runAway() {
   if (!canAct()) return;
+  playSound("run");
   state.busy = true;
   setButtonsEnabled(false);
   state.scene = "escaped";
@@ -341,6 +454,7 @@ function cannotContinueInfection() {
 }
 
 function failEggmanization() {
+  playSound("fail");
   state.scene = "result";
   state.busy = true;
   setButtonsEnabled(false);
@@ -375,6 +489,7 @@ function applyInfection(amount, shout) {
 }
 
 function pixelize() {
+  playSound("pixel");
   state.stage = "pixel";
   triggerEffect("noise", 760);
   queueMessage(["身体のデジタル化が", "始まった……"], () => {
@@ -390,6 +505,7 @@ function pixelize() {
 }
 
 function completeInfection() {
+  playSound("complete");
   state.stage = "eggman";
   state.infection = 100;
   triggerEffect("complete", 900);
@@ -403,6 +519,7 @@ function enemyTurn() {
   const damage = state.stage === "pixel" ? randInt(8, 13) : randInt(5, 10);
 
   queueMessage([`${state.enemy.displayName}は`, "Eggmanに向かって", "何かを投げた！"], () => {
+    playSound("cream");
     triggerEffect("cream", 1050);
     queueMessage(["Eggman「これは、", "マヨネーズ？！」"]);
     queueMessage(["Eggmanは", "口を開いた"]);
